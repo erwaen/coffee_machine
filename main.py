@@ -66,8 +66,29 @@ def handle_ask_prompt(prompt):
         return 3
 
 
-def coin_prompt():
-    pass
+def coin_prompt(coffee_type):
+    print("Please insert coins.")
+    quarters_amount = int(input("How many quarters? ")) # quarters value = $0.25
+    dimes_amount = int(input("How many dimes? ")) # dimes value = $0.10
+    nickles_amount = int(input("How many nickles? ")) # nickles value = $0.05
+    pennies_amount = int(input("How many pennies? ")) # pennies value = $0.01
+
+    user_coins_total = quarters_amount*0.25 + dimes_amount*0.10 + nickles_amount*0.05 + pennies_amount*0.01
+    coffee_value = MENU[coffee_type]["cost"]
+    if user_coins_total < coffee_value:
+        print("Sorry that's enough money. Money refunded.")
+    elif user_coins_total >= coffee_value:
+        change = user_coins_total - coffee_value
+
+        #aumentamos el monedero de la maquina
+        resources["money"] += user_coins_total
+        resources["money"] -= change
+        print(f"Here is ${change} in change.")
+        print(f"Here is your {coffee_type} ☕ Enjoy!.")
+
+        #reducimos los recursos de la maquina dependiendo del cafe que se preparo.
+        for ingredient in MENU[coffee_type]["ingredients"]:
+            resources[ingredient] -= MENU[coffee_type]["ingredients"][ingredient]
 
 
 def resources_exist(selected_coffee):
@@ -115,11 +136,7 @@ def coffee_machine():
         elif continue_or_no == 1 or continue_or_no == 3:
             continue
         if resources_exist(coffee_option): #si hay recursos, procedemos al pago
-            coin_prompt()
-
-
-
-
+            coin_prompt(coffee_option)
 
 
 coffee_machine()
